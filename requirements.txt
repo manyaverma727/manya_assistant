@@ -1,0 +1,6 @@
+numpy
+{/*needed for speech recog and uske pehle portaudio download karna pada bcoz vo help karega in cross platform*/}
+pyaudio 
+scipy
+python-dotenv
+colorama
