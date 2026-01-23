@@ -1,3 +1,4 @@
+import speech_recognition as sr
 import pyaudio.  #/*microphone ko access karega and continuous sounds lega*/
 import sys         #/* helps python to find file path in src folder*/
 import os           #/*work with file paths..accross diff platforms jaise windows,mac,linux*/
@@ -8,6 +9,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 #import ho rhi meri files*/
 from src.core import config
 from src.audio import vad
+from src.services.stt import STTService
+from src.services.tts import TTSService
 
 init() #/*colorama ko initialize karega*/
 
@@ -32,23 +35,24 @@ def main():
         while True:
             # audio input read karega
             # exception_on_overflow=False crash hone se bachaega if computer is slow
-            raw_data=stream.read(config.CHUNK_SIZE, exception_on_overflow=False)
+            rawd=stream.read(config.CHUNK_SIZE, exception_on_overflow=False)
             
             # energy calcs
-            energy=vad.calculate_rms(raw_data)
-            # 4. Visualization (Output)
-            # Create a bar that grows with energy
-            bar_length = int(energy / 20)  # Divide by 20 to scale it down
-            bar = "█" * bar_length
-            
-            # Determine if it is silence or speech
-            if energy > config.VAD_THRESHOLD:
-                status = f"{Fore.GREEN}SPEAKING{Style.RESET_ALL}"
+            ener=vad.calculate_rms(rawd)
+
+
+            # OUTPUT PART
+            # bar which throws energy
+            barl=int(ener/20)  # scale down karne ke liye divide by 20
+            bar="█"*barl
+            # sochega if silence ha ya bol rha
+            if ener>config.VAD_THRESHOLD:
+                status=f"{Fore.GREEN}SPEAKING{Style.RESET_ALL}"
             else:
-                status = f"{Fore.RED}SILENCE {Style.RESET_ALL}"
+                status=f"{Fore.RED}SILENCE{Style.RESET_ALL}"
             
             # Print on the same line using \r
-            print(f"\rEnergy: {int(energy):04d} | {status} | {bar}", end="")
+            print(f"\rEnergy:{int(energy):04d}|{status}|{bar}",end="")
             
     except KeyboardInterrupt:
         print("\nStopping...")
