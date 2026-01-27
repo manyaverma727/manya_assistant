@@ -1,6 +1,7 @@
 numpy
-{/*needed for speech recog and uske pehle portaudio download karna pada bcoz vo help karega in cross platform*/}
-pyaudio 
+SpeechRecognition
+pyaudio
+pyttsx3
 scipy
 python-dotenv
 colorama
